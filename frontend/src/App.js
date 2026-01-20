@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ZoneCard from './components/ZoneCard';
 import DashboardHeader from './components/DashboardHeader';
@@ -44,6 +44,24 @@ const initializeZones = () => {
 function App() {
   // Zone-wise state structure
   const [zones, setZones] = useState(initializeZones());
+  const [history, setHistory] = useState([]);
+  const [showHistory, setShowHistory] = useState(false);
+
+  // Load history from MongoDB on mount
+  useEffect(() => {
+    loadHistory();
+  }, []);
+
+  const loadHistory = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/history?limit=20`);
+      if (response.data.success) {
+        setHistory(response.data.data);
+      }
+    } catch (err) {
+      console.error('Failed to load history:', err);
+    }
+  };
 
   // Toggle zone expansion (collapse others)
   const handleToggleZone = (zoneId) => {
@@ -94,7 +112,8 @@ function App() {
         rain_flag: parseInt(zone.formData.rain_flag),
         slope_angle_deg: parseFloat(zone.formData.slope_angle_deg),
         slope_height_m: parseFloat(zone.formData.slope_height_m),
-        pore_water_pressure_ratio: parseFloat(zone.formData.pore_water_pressure_ratio)
+        pore_water_pressure_ratio: parseFloat(zone.formData.pore_water_pressure_ratio),
+        zone: ZONE_CONFIG[zoneId].name
       });
 
       // Update only this zone's prediction
@@ -107,6 +126,9 @@ function App() {
           error: null
         }
       }));
+
+      // Reload history after new prediction
+      loadHistory();
     } catch (err) {
       setZones(prev => ({
         ...prev,
@@ -119,11 +141,55 @@ function App() {
     }
   };
 
+  const getRiskColor = (level) => {
+    switch(level) {
+      case 'Low': return '#10b981';
+      case 'Medium': return '#f59e0b';
+      case 'High': return '#ef4444';
+      default: return '#6b7280';
+    }
+  };
+
   return (
     <div className="dashboard-app">
       <DashboardHeader zones={zones} />
       
       <div className="dashboard-container">
+        {/* History Toggle Button */}
+        <div className="history-toggle">
+          <button 
+            className="history-btn"
+            onClick={() => setShowHistory(!showHistory)}
+          >
+            📊 {showHistory ? 'Hide History' : 'Show History'} ({history.length})
+          </button>
+        </div>
+
+        {/* History Panel */}
+        {showHistory && history.length > 0 && (
+          <div className="history-panel">
+            <h3>📜 Recent Predictions (from MongoDB)</h3>
+            <div className="history-list">
+              {history.map((item, index) => (
+                <div key={item._id || index} className="history-item">
+                  <div className="history-risk" style={{ backgroundColor: getRiskColor(item.result?.risk_level) }}>
+                    {item.result?.risk_level || 'N/A'}
+                  </div>
+                  <div className="history-details">
+                    <span className="history-zone">{item.zone || 'Unknown Zone'}</span>
+                    <span className="history-time">
+                      {new Date(item.createdAt).toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="history-confidence">
+                    {item.result?.confidence?.toFixed(1)}% confident
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="zones-grid">
           {Object.entries(ZONE_CONFIG).map(([zoneId, config]) => (
             <ZoneCard
@@ -157,7 +223,7 @@ function App() {
       </div>
 
       <footer className="dashboard-footer">
-        <p>🔬 Powered by Python ML + Node.js + React | Hackathon 2026</p>
+        <p>🔬 Powered by Python ML + Node.js + React + MongoDB | Hackathon 2026</p>
       </footer>
     </div>
   );
