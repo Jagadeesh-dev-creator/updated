@@ -1,3 +1,4 @@
+// Dashboard Header Component v1.0
 import React from 'react';
 
 const DashboardHeader = ({ zones }) => {

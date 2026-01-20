@@ -1,3 +1,4 @@
+// Prediction Schema v1.0
 const mongoose = require('mongoose');
 
 const predictionSchema = new mongoose.Schema({

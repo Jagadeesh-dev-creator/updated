@@ -1,5 +1,5 @@
 """
-Rockfall Risk Prediction Model Training (real dataset)
+Rockfall Risk Prediction Model Training v1.0 (real dataset)
 Uses merged_dataset.csv produced from weather + slope + rock samples.
 """
 

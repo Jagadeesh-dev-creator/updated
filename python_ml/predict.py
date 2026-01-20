@@ -1,5 +1,5 @@
 """
-Flask API for Rockfall Risk Prediction
+Flask API for Rockfall Risk Prediction v1.0
 Endpoint: POST /predict
 Input: {slope, rainfall, temperature}
 Output: {risk_level, probability, message}
