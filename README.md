@@ -236,14 +236,17 @@ $env:PORT=3001; npm start
 | Parameter | Range | Unit | Description |
 |-----------|-------|------|-------------|
 | Temperature | -20 to 50 | °C | Ambient temperature |
-| Humidity | 0 to 100 | % | Relative humidity |
+| Humidity | 0 to 100
+
+
+ | % | Relative humidity |
 | Wind Speed | 0 to 50 | m/s | Wind velocity |
 | Rain Flag | 0 or 1 | - | Precipitation indicator |
 | Slope Angle | 0 to 90 | ° | Inclination angle |
 | Slope Height | 0 to 500 | m | Vertical height |
 | Pore Water Pressure Ratio | 0 to 1 | - | Groundwater pressure ratio |
 
-### Risk Output
+### Risk Output r
 - **Risk Level**: Low ✅ / Medium ⚠️ / High 🚨
 - **Confidence Score**: Percentage certainty
 - **Probability Distribution**: Low/Medium/High probabilities

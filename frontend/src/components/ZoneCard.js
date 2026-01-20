@@ -182,38 +182,40 @@ const ZoneCard = ({
             
             <p className="risk-message">{prediction.message}</p>
             
+            {prediction.probabilities && (
             <div className="probability-bars">
               <div className="prob-item">
                 <span className="prob-label">Low</span>
                 <div className="prob-bar">
                   <div 
                     className="prob-fill low" 
-                    style={{ width: `${prediction.probabilities.low}%` }}
+                    style={{ width: `${prediction.probabilities.low || 0}%` }}
                   ></div>
                 </div>
-                <span className="prob-value">{prediction.probabilities.low}%</span>
+                <span className="prob-value">{prediction.probabilities.low?.toFixed(2) || 0}%</span>
               </div>
               <div className="prob-item">
                 <span className="prob-label">Medium</span>
                 <div className="prob-bar">
                   <div 
                     className="prob-fill medium" 
-                    style={{ width: `${prediction.probabilities.medium}%` }}
+                    style={{ width: `${prediction.probabilities.medium || 0}%` }}
                   ></div>
                 </div>
-                <span className="prob-value">{prediction.probabilities.medium}%</span>
+                <span className="prob-value">{prediction.probabilities.medium?.toFixed(2) || 0}%</span>
               </div>
               <div className="prob-item">
                 <span className="prob-label">High</span>
                 <div className="prob-bar">
                   <div 
                     className="prob-fill high" 
-                    style={{ width: `${prediction.probabilities.high}%` }}
+                    style={{ width: `${prediction.probabilities.high || 0}%` }}
                   ></div>
                 </div>
-                <span className="prob-value">{prediction.probabilities.high}%</span>
+                <span className="prob-value">{prediction.probabilities.high?.toFixed(2) || 0}%</span>
               </div>
             </div>
+            )}
           </div>
         )}
       </div>
